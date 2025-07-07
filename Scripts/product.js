@@ -63,29 +63,39 @@ products.forEach((product) => {
 })
 productsGrid.innerHTML = productsHtml;
 
+
+const addToCart = (productId, quantity) => {
+    let matchingItem;
+    Cart.forEach((cartItem) => {
+        if (productId === cartItem.productId) {
+            matchingItem = cartItem;
+        }
+    });
+
+    if (matchingItem) {
+        matchingItem.quentity += 1;
+    } else {
+        Cart.push({
+            productId: productId,
+            quentity: 1
+        });
+    }
+    calculateCartQuantity()
+};
+const calculateCartQuantity = () => {
+    let totalQuantity = 0;
+    Cart.forEach((cartItem) => {
+        totalQuantity += cartItem.quentity;
+    });
+    return totalQuantity;
+};
+
+
+
 document.querySelectorAll('.js-add-to-cart').forEach(button => {
     button.addEventListener('click', () => {
         const productId = button.dataset.productId; // Récupère l'ID du produit depuis l'attribut data-
-
-        // Vérifie si le produit est déjà dans le panier
-        let matchingItem;
-        Cart.forEach((cartItem) => {
-            if (productId === cartItem.productId) {
-                matchingItem = cartItem;
-            }
-        });
-
-        if (matchingItem) {
-            // Si le produit existe déjà, incrémente la quantité de 1
-            matchingItem.quentity += 1;
-        } else {
-            // Si le produit n'est pas dans le panier, l'ajoute avec une quantité de 1
-            Cart.push({
-                productId: productId,
-                quentity: 1
-            });
-        }
-
+        addToCart(productId)
         // Logique pour afficher le message "Added"
         const addedToCartElement = button.closest('.product-container').querySelector('.added-to-cart');
         if (addedToCartElement) {
@@ -97,3 +107,5 @@ document.querySelectorAll('.js-add-to-cart').forEach(button => {
         }
     });
 });
+
+console.log(document.querySelector('cart-quantyti-js'));
