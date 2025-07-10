@@ -1,6 +1,6 @@
 
 import { products } from "../data/products.js";
-import { Cart } from "../data/Cart.js";
+import { addToCart } from "../fontions/addToCart.js";
 
 const productsGrid = document.querySelector('.products-grid-js')
 
@@ -34,7 +34,7 @@ products.forEach((product) => {
                     </div>
 
                     <div class="product-quantity-container">
-                        <select>
+                        <select class= 'js-quantity-selector'>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -62,42 +62,19 @@ products.forEach((product) => {
             `;
 })
 productsGrid.innerHTML = productsHtml;
-
-
-const addToCart = (productId, quantity) => {
-    let matchingItem;
-    Cart.forEach((cartItem) => {
-        if (productId === cartItem.productId) {
-            matchingItem = cartItem;
-        }
-    });
-
-    if (matchingItem) {
-        matchingItem.quentity += 1;
-    } else {
-        Cart.push({
-            productId: productId,
-            quentity: 1
-        });
-    }
-    calculateCartQuantity()
-};
-const calculateCartQuantity = () => {
-    let totalQuantity = 0;
-    Cart.forEach((cartItem) => {
-        totalQuantity += cartItem.quentity;
-    });
-    return totalQuantity;
-};
-
-
-
 document.querySelectorAll('.js-add-to-cart').forEach(button => {
     button.addEventListener('click', () => {
-        const productId = button.dataset.productId; // Récupère l'ID du produit depuis l'attribut data-
-        addToCart(productId)
+        // Récupère l'ID du produit depuis l'attribut data-
+        const productId = button.dataset.productId;
+        // Récupère l'élément select de quantité associé à ce bouton
+        // On trouve le conteneur parent du bouton, puis le sélecteur de quantité à l'intérieur.
+        const productContainer = button.closest('.product-container');
+        const quantitySelector = productContainer.querySelector('.js-quantity-selector');
+        // Convertit la valeur sélectionnée en nombre
+        const quantity = Number(quantitySelector.value);
+        addToCart(productId, quantity)
         // Logique pour afficher le message "Added"
-        const addedToCartElement = button.closest('.product-container').querySelector('.added-to-cart');
+        const addedToCartElement = productContainer.querySelector('.added-to-cart');
         if (addedToCartElement) {
             addedToCartElement.style.opacity = '1'; // Rend le message visible
             // Cache le message après 2 secondes
@@ -107,5 +84,3 @@ document.querySelectorAll('.js-add-to-cart').forEach(button => {
         }
     });
 });
-
-console.log(document.querySelector('cart-quantyti-js'));
