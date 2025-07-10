@@ -1,4 +1,6 @@
+
 import { Cart } from "../data/Cart.js";
+import { saveCartToLocalStorage } from "./saveToStorage.js";
 import { updateCartQuantityDisplay } from "./updateCartQuantityDisplay.js";
 export const addToCart = (productId, quantity) => {
     let matchingItem;
@@ -7,7 +9,6 @@ export const addToCart = (productId, quantity) => {
             matchingItem = cartItem;
         }
     });
-
     if (matchingItem) {
         matchingItem.quentity += quantity;
     } else {
@@ -18,4 +19,6 @@ export const addToCart = (productId, quantity) => {
         });
     }
     updateCartQuantityDisplay()
+    saveCartToLocalStorage()
+
 };
